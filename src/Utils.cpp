@@ -15,7 +15,7 @@ string trim(string text) {
     return text.substr(first, last - first + 1);
 }
 
-//upper-casing
+// upper-casing
 string toUpperCase(string text) {
     for (size_t i = 0; i < text.size(); i++) {
         if (text.at(i) >= 'a' && text.at(i) <= 'z') {
@@ -25,7 +25,7 @@ string toUpperCase(string text) {
     return text;
 }
 
-//lower-casing
+// lower-casing
 string toLowerCase(string text) {
     for (size_t i = 0; i < text.size(); i++) {
         if (text.at(i) >= 'A' && text.at(i) <= 'Z') {
