@@ -1,0 +1,9 @@
+# Executables and object files
+campus
+campus.exe
+a.out
+*.o
+*.exe
+
+# Editor files
+.vscode/
