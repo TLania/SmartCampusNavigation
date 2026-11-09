@@ -1,0 +1,394 @@
+Test results Project 2 - Milestone 1
+````````````````````````````````````````````````````````````````````````````````````````
+Build: g++ -Iinclude -o campus src/*.cpp 
+Run: ./campus [data-directory]   (default data/; test cases use ./campus testdata/<case>)
+Each test lists: Description, data directory, input, expected result, actual result, pass or fail.
+Actual output has the repeated menu listing and the 'Enter your choice:' prompt removed. 
+Tests that do not concern file loading, leaves out the startup loading lines as shown in test 1.
+````````````````````````````````````````````````````````````````````````````````````````
+
+Test 1: Sample files load (default data/ directory, no argument)
+Data directory: data/ (default, no argument)
+Input: 10
+Expected: Summaries: buildings 7/0, connections 6/0, facilities 10/0 with hash stats (capacity 13, entries 10, collisions 1), departments 7/0. No warnings.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: data/
+    buildings.txt: 7 accepted, 0 rejected
+    connections.txt: 6 accepted, 0 rejected
+    facilities.txt: 10 accepted, 0 rejected (hash capacity 13, entries 10, collisions 1)
+    departments.txt: 7 accepted, 0 rejected
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 2: Comment lines, blank lines, and records with too few or too many fields
+Data directory: testdata/case1_bad_records
+Input: 10
+Expected: Comment and blank lines are skipped silently but still counted in line numbers (the first bad building is line 5). 'Expected: <layout>' warnings: connections lines 7 and 8, facilities lines 4 and 5, departments line 7.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: testdata/case1_bad_records
+    Warning: buildings.txt line 5: Duplicate building name (the first record is kept)
+    Warning: buildings.txt line 7: Building line holds one name and no '|'
+    buildings.txt: 5 accepted, 2 rejected
+    Warning: connections.txt line 3: Duplicate connection (including the reverse order)
+    Warning: connections.txt line 4: Building cannot connect to itself
+    Warning: connections.txt line 5: Building is not in buildings.txt: Atlantis
+    Warning: connections.txt line 6: Building is not in buildings.txt: Atlantis
+    Warning: connections.txt line 7: Expected: BuildingA|BuildingB
+    Warning: connections.txt line 8: Expected: BuildingA|BuildingB
+    Warning: connections.txt line 11:  Building name is empty
+    connections.txt: 3 accepted, 7 rejected
+    Warning: facilities.txt line 3: Duplicate facility ID (the first record is kept)
+    Warning: facilities.txt line 4: Expected: FacilityID|FacilityName|BuildingName|Category
+    Warning: facilities.txt line 5: Expected: FacilityID|FacilityName|BuildingName|Category
+    Warning: facilities.txt line 6: This building is not in buildings.txt: Atlantis
+    Warning: facilities.txt line 7: Invalid facility ID
+    Warning: facilities.txt line 8: Missing a required field
+    facilities.txt: 3 accepted, 6 rejected (hash capacity 13, entries 3, collisions 0)
+    Warning: departments.txt line 4: Parent department is not in the tree: Nowhere
+    Warning: departments.txt line 5: Duplicate department name
+    Warning: departments.txt line 6: Only the root can have parent: none
+    Warning: departments.txt line 7: Expected DepartmentName|ParentName
+    Warning: departments.txt line 9: Missing a required field
+    departments.txt: 3 accepted, 5 rejected
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 3: A missing file: connections.txt and facilities.txt are absent; menu 3 then Exit
+Data directory: testdata/case2_missing_files
+Input: 3, 10
+Expected: 'Error: cannot open <path> - treating it as empty.' and a 0/0 summary for each missing file; the other files still load; the menu still works.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: testdata/case2_missing_files
+    Warning: buildings.txt line 5: Duplicate building name (the first record is kept)
+    Warning: buildings.txt line 7: Building line holds one name and no '|'
+    buildings.txt: 5 accepted, 2 rejected
+    Error: cannot open testdata/case2_missing_files/connections.txt - treating it as empty.
+    connections.txt: 0 accepted, 0 rejected
+    Error: cannot open testdata/case2_missing_files/facilities.txt - treating it as empty.
+    facilities.txt: 0 accepted, 0 rejected (hash capacity 13, entries 0, collisions 0)
+    departments.txt: 7 accepted, 0 rejected
+    Campus graph (building: neighbors in connection order):
+    Library: no connections
+    Student Union: no connections
+    Science Building: no connections
+    Gym: no connections
+    Observatory: no connections
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 4: Duplicate building name (LIBRARY after Library) and duplicate facility ID (f001 after F001), differing only by capitalization; menu 3 and 1
+Data directory: testdata/case1_bad_records
+Input: 3, 1, 10
+Expected: Warnings for buildings.txt line 5 and facilities.txt line 3 (first record kept). The graph shows Library once, and the listing still shows the original F001 record.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: testdata/case1_bad_records
+    Warning: buildings.txt line 5: Duplicate building name (the first record is kept)
+    Warning: buildings.txt line 7: Building line holds one name and no '|'
+    buildings.txt: 5 accepted, 2 rejected
+    Warning: connections.txt line 3: Duplicate connection (including the reverse order)
+    Warning: connections.txt line 4: Building cannot connect to itself
+    Warning: connections.txt line 5: Building is not in buildings.txt: Atlantis
+    Warning: connections.txt line 6: Building is not in buildings.txt: Atlantis
+    Warning: connections.txt line 7: Expected: BuildingA|BuildingB
+    Warning: connections.txt line 8: Expected: BuildingA|BuildingB
+    Warning: connections.txt line 11:  Building name is empty
+    connections.txt: 3 accepted, 7 rejected
+    Warning: facilities.txt line 3: Duplicate facility ID (the first record is kept)
+    Warning: facilities.txt line 4: Expected: FacilityID|FacilityName|BuildingName|Category
+    Warning: facilities.txt line 5: Expected: FacilityID|FacilityName|BuildingName|Category
+    Warning: facilities.txt line 6: This building is not in buildings.txt: Atlantis
+    Warning: facilities.txt line 7: Invalid facility ID
+    Warning: facilities.txt line 8: Missing a required field
+    facilities.txt: 3 accepted, 6 rejected (hash capacity 13, entries 3, collisions 0)
+    Warning: departments.txt line 4: Parent department is not in the tree: Nowhere
+    Warning: departments.txt line 5: Duplicate department name
+    Warning: departments.txt line 6: Only the root can have parent: none
+    Warning: departments.txt line 7: Expected DepartmentName|ParentName
+    Warning: departments.txt line 9: Missing a required field
+    departments.txt: 3 accepted, 5 rejected
+    Campus graph (building: neighbors in connection order):
+    Library: Student Union, Science Building
+    Student Union: Library, Gym
+    Science Building: Library
+    Gym: Student Union
+    Observatory: no connections
+    Facilities (ID | Name | Building | Category):
+    F001 | Main Reading Room | Library | Library
+    F006 | Padded Room | Gym | Recreation
+    F007 | Room #5 | Library | Library
+    Total facilities: 3
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 5: Unknown building references (connections and facilities), duplicate and reversed connection, unknown department parent; menu 4 and 8
+Data directory: testdata/case1_bad_records
+Input: 4, 8, 10
+Expected: Each bad record is rejected with a warning naming the unknown building or parent. The reversed duplicate student union|LIBRARY (line 3) is rejected, so Library has degree 2 and there are 3 connections. Only University, College of Science and Chemistry are in the tree.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: testdata/case1_bad_records
+    Warning: buildings.txt line 5: Duplicate building name (the first record is kept)
+    Warning: buildings.txt line 7: Building line holds one name and no '|'
+    buildings.txt: 5 accepted, 2 rejected
+    Warning: connections.txt line 3: Duplicate connection (including the reverse order)
+    Warning: connections.txt line 4: Building cannot connect to itself
+    Warning: connections.txt line 5: Building is not in buildings.txt: Atlantis
+    Warning: connections.txt line 6: Building is not in buildings.txt: Atlantis
+    Warning: connections.txt line 7: Expected: BuildingA|BuildingB
+    Warning: connections.txt line 8: Expected: BuildingA|BuildingB
+    Warning: connections.txt line 11:  Building name is empty
+    connections.txt: 3 accepted, 7 rejected
+    Warning: facilities.txt line 3: Duplicate facility ID (the first record is kept)
+    Warning: facilities.txt line 4: Expected: FacilityID|FacilityName|BuildingName|Category
+    Warning: facilities.txt line 5: Expected: FacilityID|FacilityName|BuildingName|Category
+    Warning: facilities.txt line 6: This building is not in buildings.txt: Atlantis
+    Warning: facilities.txt line 7: Invalid facility ID
+    Warning: facilities.txt line 8: Missing a required field
+    facilities.txt: 3 accepted, 6 rejected (hash capacity 13, entries 3, collisions 0)
+    Warning: departments.txt line 4: Parent department is not in the tree: Nowhere
+    Warning: departments.txt line 5: Duplicate department name
+    Warning: departments.txt line 6: Only the root can have parent: none
+    Warning: departments.txt line 7: Expected DepartmentName|ParentName
+    Warning: departments.txt line 9: Missing a required field
+    departments.txt: 3 accepted, 5 rejected
+    Building          Degree
+    Library           2
+    Student Union     2
+    Science Building  1
+    Gym               1
+    Observatory       0
+    Total buildings: 5. Total connections: 3.
+    University
+        College of Science
+            Chemistry
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 6: ID searches: successful (F004), lowercase (f004), invalid format (004), not found (F999)
+Data directory: data/ (default, no argument)
+Input: 2, F004, 2, f004, 2, 004, 2, F999, 10
+Expected: F004 and f004 both give 'Found: Computer Lab A | Science Building | Computer Lab'; 004 gives the invalid-format message; F999 gives 'Not found' with the normalized ID.
+Actual:
+    Enter facility ID: Found: Computer Lab A | Science Building | Computer Lab
+    Enter facility ID: Found: Computer Lab A | Science Building | Computer Lab
+    Enter facility ID: Invalid format: an ID is F followed by exactly three digits
+    Enter facility ID: Not found: no facility with ID F999
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 7: Hash collision: own test data where F001, F017 and F020 share a bucket (capacity 13), with a duplicate f001 in the file; then search F001, F017, f020
+Data directory: testdata/case3_collision
+Input: 2, F001, 2, F017, 2, f020, 10
+Expected: HASH-7 diagnostic: capacity 13, 4 entries, 2 collisions (F017 and F020 each land in a non-empty bucket). The rejected duplicate adds no collision. All three IDs are found with their own data; F001 is the original record.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: testdata/case3_collision
+    buildings.txt: 2 accepted, 0 rejected
+    connections.txt: 0 accepted, 0 rejected
+    Warning: facilities.txt line 4: Duplicate facility ID (the first record is kept)
+    facilities.txt: 4 accepted, 1 rejected (hash capacity 13, entries 4, collisions 2)
+    departments.txt: 0 accepted, 0 rejected
+    Enter facility ID: Found: Main Reading Room | Library | Library
+    Enter facility ID: Found: Weight Room | Gym | Recreation
+    Enter facility ID: Found: Study Pod | Library | Library
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 8: Duplicate-key attempt does not change the collision count: the same data without the duplicate line
+Data directory: testdata/case3b_collision_no_duplicate
+Input: 10
+Expected: Identical diagnostic to the previous test (4 entries, 2 collisions) and no warning, so the rejected duplicate in the previous test changed nothing.
+Actual:
+    Smart Campus Navigation and Facility Analytics System
+    Data directory: testdata/case3b_collision_no_duplicate
+    buildings.txt: 2 accepted, 0 rejected
+    connections.txt: 0 accepted, 0 rejected
+    facilities.txt: 4 accepted, 0 rejected (hash capacity 13, entries 4, collisions 2)
+    departments.txt: 0 accepted, 0 rejected
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 9: BFS: connected start (Library), isolated start (Observatory), unknown start (Atlantis), and a name with a space (Engineering Building)
+Data directory: data/ (default, no argument)
+Input: 5, Library, 5, Observatory, 5, Atlantis, 5, Engineering Building, 10
+Expected: Library: visit order Library, Student Union, Business Building, Science Building, Gym, Engineering Building with distances 0,1,1,2,2,3; Reachable 6 of 7. Observatory: alone, Reachable 1 of 7. Atlantis: error naming it, back to the menu. Engineering Building: starts at distance 0, Reachable 6 of 7.
+Actual:
+    Enter starting building: Library (distance 0)
+    Student Union (distance 1)
+    Business Building (distance 1)
+    Science Building (distance 2)
+    Gym (distance 2)
+    Engineering Building (distance 3)
+    Reachable: 6 of 7 buildings
+    Enter starting building: Observatory (distance 0)
+    Reachable: 1 of 7 buildings
+    Enter starting building: Error: unknown building: Atlantis
+    Enter starting building: Engineering Building (distance 0)
+    Science Building (distance 1)
+    Student Union (distance 2)
+    Library (distance 3)
+    Gym (distance 3)
+    Business Building (distance 4)
+    Reachable: 6 of 7 buildings
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 10: BFS on a graph with multiple connected components (A1-A2-A3, B1-B2, C1, D1): starts A1, B1, C1
+Data directory: testdata/case4_components
+Input: 5, A1, 5, B1, 5, C1, 10
+Expected: A1 reaches only A1, A2, A3 (distances 0,1,2), Reachable 3 of 7; B1 reaches B1, B2, Reachable 2 of 7; isolated C1 reaches only itself, Reachable 1 of 7.
+Actual:
+    Enter starting building: A1 (distance 0)
+    A2 (distance 1)
+    A3 (distance 2)
+    Reachable: 3 of 7 buildings
+    Enter starting building: B1 (distance 0)
+    B2 (distance 1)
+    Reachable: 2 of 7 buildings
+    Enter starting building: C1 (distance 0)
+    Reachable: 1 of 7 buildings
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 11: Empty tree: hierarchy and preorder messages, then add the root (input: 8, 9, 6, University, 8, 9)
+Data directory: testdata/case5_empty_tree
+Input: 8, 9, 6, University, 8, 9, 10
+Expected: 'No departments are loaded.' twice; adding asks only for the name (no parent prompt) and prints 'Added root department: University'; the hierarchy and preorder then show University.
+Actual:
+    No departments are loaded.
+    No departments are loaded.
+    Enter new department name: Added root department: University
+    University
+    Preorder traversal: University
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 12: Root-only tree: hierarchy, preorder, and search for the root
+Data directory: testdata/case6_root_only
+Input: 8, 9, 7, University, 10
+Expected: University alone in both displays; search shows Parent: None, Direct children: 0, Depth: 0.
+Actual:
+    University
+    Preorder traversal: University
+    Enter department name: Department: University
+    Parent: None
+    Direct children: 0
+    Depth: 0
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 13: Department searches (sample tree): the root in lowercase, a non-root with padding and mixed case, and a missing department
+Data directory: data/ (default, no argument)
+Input: 7, university, 7,   computer SCIENCE , 7, Biology, 10
+Expected: university: Parent None, 2 children, depth 0. computer SCIENCE: Computer Science, parent College of Engineering, 0 children, depth 2. Biology: not found.
+Actual:
+    Enter department name: Department: University
+    Parent: None
+    Direct children: 2
+    Depth: 0
+    Enter department name: Department: Computer Science
+    Parent: College of Engineering
+    Direct children: 0
+    Depth: 2
+    Enter department name: Not found: no department named Biology
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 14: Adding departments: unknown parent (Chemistry under Ghost), duplicate name (physics), and a name with spaces (Data Science Lab under college of science); then 8 and 9
+Data directory: data/ (default, no argument)
+Input: 6, Chemistry, Ghost, 6, physics, University, 6, Data Science Lab, college of science, 8, 9, 10
+Expected: Unknown parent and duplicate each print an error naming the problem and leave the tree unchanged (no Chemistry, Physics still once). Data Science Lab is added under College of Science and appears last under it.
+Actual:
+    Enter new department name: Enter parent department name: Error: Parent department is not in the tree: Ghost
+    Enter new department name: Enter parent department name: Error: Duplicate department name: physics
+    Enter new department name: Enter parent department name: Added department: Data Science Lab (parent: College of Science)
+    University
+        College of Engineering
+            Computer Science
+            Electrical Engineering
+        College of Science
+            Mathematics
+            Physics
+            Data Science Lab
+    Preorder traversal: University, College of Engineering, Computer Science, Electrical Engineering, College of Science, Mathematics, Physics, Data Science Lab
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 15: Hierarchy and preorder traversal of the sample tree
+Data directory: data/ (default, no argument)
+Input: 8, 9, 10
+Expected: Hierarchy indented 4 spaces per depth (University at column 0), then the preorder sequence on one unindented line.
+Actual:
+    University
+        College of Engineering
+            Computer Science
+            Electrical Engineering
+        College of Science
+            Mathematics
+            Physics
+    Preorder traversal: University, College of Engineering, Computer Science, Electrical Engineering, College of Science, Mathematics, Physics
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 16: Invalid menu input, text at prompts, blank names, and repeated operations after errors
+Data directory: data/ (default, no argument)
+Input: <blank>, abc, 5abc, -1, 3.5, 99, 6, <blank>, 5, <blank>, 2, <blank>, 7, <blank>, 5, Nowhere, 5, Gym, 2, F999, 2, F008, 10
+Expected: Blank, letters, mixed text, negative, decimal and out-of-range menu input each print 'Error: Enter a number from 1 to 10.' and the menu returns. A blank department name, building name, facility ID and department search each print their own blank-name error and return to the menu. After the errors, a bad BFS start and a bad ID are followed by a good BFS (Gym) and a good ID (F008) that work normally.
+Actual:
+    Error: Enter a number from 1 to 10.
+    Error: Enter a number from 1 to 10.
+    Error: Enter a number from 1 to 10.
+    Error: Enter a number from 1 to 10.
+    Error: Enter a number from 1 to 10.
+    Error: Enter a number from 1 to 10.
+    Enter new department name: Error: Department name cannot be blank.
+    Enter starting building: Error: the building name cannot be blank.
+    Enter facility ID: Error: Facility ID cannot be blank.
+    Enter department name: Error: the department name cannot be blank.
+    Enter starting building: Error: unknown building: Nowhere
+    Enter starting building: Gym (distance 0)
+    Student Union (distance 1)
+    Business Building (distance 1)
+    Library (distance 2)
+    Science Building (distance 2)
+    Engineering Building (distance 3)
+    Reachable: 6 of 7 buildings
+    Enter facility ID: Not found: no facility with ID F999
+    Enter facility ID: Found: Fitness Center | Gym | Recreation
+    Goodbye.
+Exit code: 0
+Result: PASS
+
+Test 17: Menu additions stay in memory: data/departments.txt is not modified by adding a department
+Data directory: data/ (default, no argument)
+Input: 6, Biology, College of Science, 10
+Expected: 'Added department: Biology (parent: College of Science)'; the checksum of data/departments.txt is identical before and after.
+Actual:
+    Enter new department name: Enter parent department name: Added department: Biology (parent: College of Science)
+    Goodbye.
+    Checksum of data/departments.txt before: 879af7f28b25c3f93fb19da425f4ced1
+    Checksum of data/departments.txt after:  879af7f28b25c3f93fb19da425f4ced1
+Exit code: 0
+Result: PASS
+
+````````````````````````````````````````````````````````````````````````````````````````
+Summary: 17 of 17 tests passed.
