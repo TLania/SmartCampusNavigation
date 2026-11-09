@@ -1,0 +1,72 @@
+Design Document Project 2 - Milestone 1
+
+1. Main classes and modules
+````````````````````````````````````````````````````````````````````````````````````````````````````````````
+Facility          Facility record: ID, name, building, category.
+FacilityManager   Loads facilities.txt, validates records, keeps the facility  list, and searches by ID through the hash table.
+HashTable         Custom hash table that uses separate chaining; HashNode is one link in a chain. Stores ID -> position of the facility in the FacilityManager list.
+CampusGraph       Buildings, connections, graph display, degrees and BFS.
+DepartmentNode    Tree node: name, parent, children, depth.
+DepartmentTree    Department tree: loading, add, search, hierarchy and preorder display. Owns and deletes its nodes.
+Utils             Shared text helpers (trim, upper-case, split on '|', skip blank and comment lines).
+main.cpp          Argument handling, loading order and the menu.
+
+2. Hash table
+````````````````````````````````````````````````````````````````````````````````````````````````````````````
+Key: the facility ID, trimmed and converted to uppercase before hashing and
+storing, so F004 and f004 are the same key.
+
+Hash function (DJB2 style), with unsigned 64-bit arithmetic:
+    hash = 5381
+    for each character c of the uppercase key:  hash = hash * 33 + c
+    index = hash % capacity
+
+Collision strategy: We utilize separate chaining, where each bucket is a linked list of nodes. A new key is added at the end of its chain.
+Reasons: 
+(1) a chain can grow, so there is no "table full" case.
+(2) it is simple and safe to implement.
+(3)  lookups only require traversing the one chain for its bucket rather than the entire facility list.
+
+Capacity: The default capacity is set to 13, defined by a constant named `DEFAULT_HASH_CAPACITY`. This prime number doesn’t divide evenly into 33, 
+ensuring that every character in the ID contributes to the bucket’s distribution (in contrast, with a capacity of 11, which does divide 33, only the last character would matter). 
+The table is designed not to resize; as more entries are added, the chains simply grow longer, meaning no entries are rejected due to lack of space.
+The `HashTable` class includes a copy constructor, destructor, and assignment operator—adhering to the rule of three.
+
+Duplicates: Attempting to insert a key that already exists (case insensitive), the entry is rejected, and the original unchanged.
+
+Collision count: If an accepted insertion goes into a bucket that already contains at least one entry, it counts as one collision.
+A rejected duplicate does not contribute to this count. The load summary displays the capacity, the number of entries, and the collision count,
+such as "hash capacity 13, entries 10, collisions 1" when using sample data (for instance, F007 and F010 sharing a bucket).
+In the test data (`case3_collision`), F001, F017, and F020 occupy the same bucket (resulting in 2 collisions), with a duplicate f001 that does not affect the count.
+
+3. Campus graph
+````````````````````````````````````````````````````````````````````````````````````````````````````````````
+Representation: The campus graph is represented using adjacency lists. Buildings are kept in the order of buildings.txt; the graph is a vector of vectors, where list i holds the
+positions of the neighbors of building i, in the order the connections were accepted. Since each connection is undirected, it is stored at both ends and counted once.
+
+Why adjacency lists instead of a matrix: The campus graph is sparse, meaning there are only a few connections per building.
+Adjacency lists utilize memory in proportion to the actual number of connections, avoiding a fixed size. This flexibility accommodates an unlimited number of buildings and connections.
+Additionally, Breadth-First Search (BFS) can efficiently visit only the neighbors of a building in a consistent and repeatable manner.
+
+Rejected connection records: wrong field count, empty name, unknown building, a building connected to itself, and duplicates (including the reverse order, B|A after A|B).
+Building and connection names are matched without regard to capitalization, and any leading or trailing spaces are removed.
+
+BFS: BFS utilizes a queue to manage building positions, along with a visited vector and a distance vector. The starting building is marked as visited and assigned a distance of 0when it is 
+added to the queue; every other building is marked as visited immediately upon being queued, ensuring it is never queued more than once.
+The result lists buildings in the order they are dequeued, displaying the number of connections from the starting building, followed by "Reachable: N of M buildings." 
+An isolated building will only list itself. If the starting building is unknown, an error message is displayed, and the user is returned to the menu.
+
+
+4. Department tree
+````````````````````````````````````````````````````````````````````````````````````````````````````````````
+A general tree: each DepartmentNode keeps a vector of child pointers, a pointer to its parent, and its depth. The first accepted department is the root and must have parent none;
+any subsequent department must reference a parent that already exists in the tree, ensuring that all names are unique, ignoring capitalization.Children are kept in insertion order.
+A recursive function handles preorder traversal (visiting the node first, followed by each child's subtree). The hierarchy display format follows the same order,
+ indenting each level of depth by four spaces. The DepartmentTree class ensures memory management by deleting every node in its destructor and implements the rule of three.
+
+5. File validation (all files)
+````````````````````````````````````````````````````````````````````````````````````````````````````````````
+Blank lines and lines whose first non-space character is '#' are skipped.
+Fields are separated by '|'. A rejected record prints "Warning: <file> line <a>: <reasoning>" (an unknown building or parent is named), and each file prints "<file>: A accepted, B rejected".
+ A file that cannot be opened prints an error and is treated as empty. Facility IDs must be F plus three digits; facility records must name a building from buildings.txt.
+Nothing hard-coded: all data comes from the files in the data directory (default data/, or the folder given on the command line).
