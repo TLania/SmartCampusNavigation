@@ -1,6 +1,5 @@
 // CampusGraph.cpp
 // Purpose: Validate campus building and walkway files and implement BFS.
-// Author: Integration draft; team should confirm module ownership.
 #include "CampusGraph.h"
 #include "Utils.h"
 #include <fstream>
