@@ -2,7 +2,7 @@ PROJECT 2: SMART CAMPUS NAVIGATION AND FACILITY ANALYTICS SYSTEM
 MILESTONE 1 - TEST RESULTS
 ============================================================
 
-PROJECT VERSION TESTED: SmartCampusNavigation-main (2).zip
+PROJECT VERSION TESTED: SmartCampusNavigation-main.zip
 TEST ENVIRONMENT: Linux container; g++ with C++17
 NOTE: These checks were NOT performed on UNT CSE CELL machines.
 
