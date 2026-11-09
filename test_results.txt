@@ -1,0 +1,198 @@
+PROJECT 2: SMART CAMPUS NAVIGATION AND FACILITY ANALYTICS SYSTEM
+MILESTONE 1 - TEST RESULTS
+============================================================
+
+PROJECT VERSION TESTED: SmartCampusNavigation-main (2).zip
+TEST ENVIRONMENT: Linux container; g++ with C++17
+NOTE: These checks were NOT performed on UNT CSE CELL machines.
+
+BUILD COMMAND:
+  g++ -std=c++17 -Wall -Wextra -Iinclude src/*.cpp -o campus
+
+RUN COMMANDS:
+  ./campus
+  ./campus testdata/collision_case
+
+COMPILATION RESULT:
+  PASS - Compilation completed with exit code 0 and no warnings.
+
+HOW TO READ THIS REPORT:
+  Each test states the scenario, input, expected behavior, observed
+  behavior, and PASS/FAIL. Actual results summarize automated output
+  checks; they are not verbatim copies of the console output.
+
+============================================================
+SECTION A - FILE LOADING AND VALIDATION
+============================================================
+
+TEST 01 - Load the provided sample data
+Description: Load all four files from the default data directory.
+Input: ./campus (default data/)
+Expected Result: 7 buildings, 6 connections, 10 facilities,
+                 and 7 departments accepted; 0 rejected.
+Actual Result: The program reported 7, 6, 10, and 7 accepted
+               records respectively, with 0 rejected.
+Status: PASS
+
+TEST 02 - Duplicate building names (case-insensitive)
+Description: Reject a building already loaded under another case.
+Input: Add 'library' after 'Library' in buildings.txt.
+Expected Result: 7 accepted buildings and 1 rejected duplicate.
+Actual Result: The automated check confirmed those counts.
+Status: PASS
+
+TEST 03 - Invalid and duplicate connections
+Description: Reject reversed duplicates, unknown buildings,
+             self-connections, and missing fields.
+Input: Add four invalid connection records to sample data.
+Expected Result: 6 accepted connections and 4 rejected records.
+Actual Result: The automated check confirmed those counts.
+Status: PASS
+
+TEST 04 - Invalid and duplicate facilities
+Description: Reject duplicate IDs regardless of case, unknown
+             buildings, invalid IDs, and incomplete records.
+Input: Add duplicate f004, an unknown building, an invalid ID,
+       and a record with a missing field.
+Expected Result: 10 accepted facilities and 4 rejected records.
+Actual Result: The automated check confirmed those counts.
+Status: PASS
+
+TEST 05 - Unknown department parent
+Description: Reject a department whose parent was not loaded.
+Input: Add 'Extra|Missing' to departments.txt.
+Expected Result: 7 accepted departments and 1 rejected record.
+Actual Result: The automated check confirmed those counts.
+Status: PASS
+
+TEST 06 - Missing input files
+Description: Continue without crashing when input files are absent.
+Input: Remove connections.txt and facilities.txt in a temporary
+       test directory, then run with that directory argument.
+Expected Result: Errors for missing files, zero records from those
+                 files, and continued execution.
+Actual Result: The automated check confirmed errors, zero counts,
+               and no crash.
+Status: PASS
+
+TEST 07 - Comments, blank lines, and malformed records
+Description: Ignore comments/blanks and reject malformed records.
+Input: Custom data files with comments, blanks, and bad lines.
+Expected Result: Correct accepted/rejected record counts.
+Actual Result: The automated check confirmed the counts.
+Status: PASS
+
+TEST 08 - Windows line endings and whitespace
+Description: Handle CRLF line endings, spaces around fields,
+             and lowercase names/IDs as specified.
+Input: Custom data files with CRLF, extra whitespace, and
+       lowercase values.
+Expected Result: Values normalize/match correctly; BFS reaches
+                 2 of 2 buildings in the custom graph.
+Actual Result: The automated check confirmed normalization,
+               matching, and BFS reachability of 2/2.
+Status: PASS
+
+============================================================
+SECTION B - FACILITY SEARCH AND CUSTOM HASH TABLE
+============================================================
+
+TEST 09 - Facility ID search cases
+Description: Verify found, case-insensitive, invalid-format,
+             and valid-but-not-found ID searches.
+Input: Menu option 2; search F004, f004, 004, and F999.
+Expected Result: F004 and f004 both find Computer Lab A;
+                 004 is rejected as invalid; F999 is not found.
+Actual Result: All four outcomes matched the automated checks.
+Status: PASS
+
+TEST 10 - Collision and duplicate-key handling
+Description: Demonstrate a hash collision using custom test data
+             without counting a rejected duplicate as a collision.
+Input: testdata/collision_case with IDs F000, F016, and f000.
+Expected Result: 2 facilities accepted, 1 duplicate rejected,
+                 hash capacity 13, and 1 collision.
+Actual Result: 2 accepted, 1 rejected, capacity 13, 1 collision.
+Status: PASS
+
+============================================================
+SECTION C - CAMPUS GRAPH AND BFS
+============================================================
+
+TEST 11 - Graph totals and degrees
+Description: Verify undirected edge totals and building degrees.
+Input: Menu option 4 with default sample data.
+Expected Result: 7 buildings, 6 connections, and Observatory
+                 with degree 0.
+Actual Result: The displayed totals and isolated-building
+               degree matched the expected values.
+Status: PASS
+
+TEST 12 - BFS from connected, isolated, and unknown buildings
+Description: Verify reachability counts and unknown-start handling.
+Input: Menu option 5; Library, Observatory, then Unknown.
+Expected Result: Library reaches 6/7; Observatory reaches 1/7;
+                 unknown building produces an error.
+Actual Result: All three outcomes matched the automated checks.
+Status: PASS
+
+============================================================
+SECTION D - DEPARTMENT GENERAL TREE
+============================================================
+
+TEST 13 - Department search, hierarchy, and preorder
+Description: Verify search details and traversal/display order.
+Input: Menu options 7, 8, and 9 with sample departments.
+Expected Result: Correct root/child depths, hierarchy order,
+                 and preorder sequence.
+Actual Result: Search and traversal checks matched expectations.
+Status: PASS
+
+TEST 14 - Add department and reject invalid additions
+Description: Verify valid insertion, duplicate rejection,
+             and rejection of unknown parent.
+Input: Menu option 6; add AI Research, try adding it again,
+       and try Other under Not There.
+Expected Result: First addition succeeds; duplicate and unknown
+                 parent are rejected.
+Actual Result: All three outcomes matched expectations.
+Status: PASS
+
+TEST 15 - Empty tree and first root insertion
+Description: Verify that the first added department becomes root
+             without prompting for a parent.
+Input: Empty departments.txt; menu options 6, 7, and 9.
+Expected Result: Root added without parent prompt; root depth 0;
+                 search and preorder work.
+Actual Result: The automated checks matched these behaviors.
+Status: PASS
+
+============================================================
+SECTION E - MENU AND INPUT VALIDATION
+============================================================
+
+TEST 16 - Invalid menu input and recovery
+Description: Verify invalid entries and blank-name handling.
+Input: Blank input, abc, 11, 1.5, and blank building/name
+       prompts during menu operations.
+Expected Result: Clear errors and recovery to the menu without
+                 a crash or infinite loop.
+Actual Result: Automated checks confirmed error handling and
+               menu recovery.
+Status: PASS
+
+============================================================
+SUMMARY
+============================================================
+Automated scenarios documented: 16
+Passed: 16
+Failed: 0
+
+IMPORTANT LIMITATIONS / FOLLOW-UP:
+- These are 16 automated scenarios, not a claim that every individual
+  Section 10 requirement has been independently checked.
+- Run and record compilation and execution on UNT CSE CELL machines.
+- Review Section 10 for any remaining edge cases needing explicit tests.
+- Confirm the final GitHub version and submitted ZIP match the tested code.
+- If source code changes, rerun the relevant tests before submission.
+- Keep the collision test input directory in testdata/ with the project.
