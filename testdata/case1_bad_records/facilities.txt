@@ -1,0 +1,10 @@
+# case1: facilities
+F001|Main Reading Room|Library|Library
+f001|Second Reading Room|Library|Library
+F002|Tutoring Center|Library
+F003|Lab|Science Building|Computer Lab|Extra
+F004|Hall|Atlantis|Classroom
+F12|Short ID|Library|Library
+F005||Library|Library
+ f006 |Padded Room|gym|Recreation
+F007|Room #5|Library|library

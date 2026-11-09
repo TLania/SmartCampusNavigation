@@ -1,0 +1,9 @@
+# case1: departments
+University|NONE
+College of Science|University
+Physics|Nowhere
+college of science|University
+Second Root|NONE
+Mathematics
+Chemistry|college of SCIENCE
+|University

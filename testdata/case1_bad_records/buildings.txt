@@ -1,0 +1,9 @@
+# case1: building records
+Library
+
+Student Union
+LIBRARY
+Science Building
+Bad|Name
+   Gym   
+Observatory

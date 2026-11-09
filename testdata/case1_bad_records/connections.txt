@@ -1,0 +1,12 @@
+# case1: connections
+Library|Student Union
+student union|LIBRARY
+Library|Library
+Library|Atlantis
+Atlantis|Gym
+Library
+Library|Gym|Extra
+
+Library|Science Building
+|Gym
+ Gym | Student Union 

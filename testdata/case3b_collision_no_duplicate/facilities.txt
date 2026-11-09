@@ -1,0 +1,4 @@
+F001|Main Reading Room|Library|Library
+F017|Weight Room|Gym|Recreation
+F020|Study Pod|Library|Library
+F002|Quiet Room|Library|Library
