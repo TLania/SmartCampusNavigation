@@ -1,0 +1,31 @@
+Contributions Project 2 - Milestone 1
+
+Members and the modules they own
+`````````````````````````````````````````````````````````````````````````````````````````````````````
+Member: Lance Manuel
+  Modules Owned: Facility records, custom hash table, and ID search.
+  Files: Facility.h/.cpp, FacilityManager.h/.cpp, HashTable.h/.cpp
+
+Member: Taylor Lania
+  Modules Owned: Campus graph, BFS reachability, and graph display and degrees.
+  Files: CampusGraph.h/.cpp
+
+Member: Nnamdi Emenike
+  Modules Owned: Department tree, preorder traversal, and department search, and hierarchy display.
+  Files: DepartmentNode.h/.cpp, DepartmentTree.h/.cpp
+
+Shared work
+`````````````````````````````````````````````````````````````````````````````````````````````````````
+  - File-loading utilities and validation rules (Utils.h/.cpp and the loaders in each module)
+  - The menu and input handling (main.cpp)
+  - Test data in testdata/ and the recorded tests (test_results.txt)
+  - Documentation: README.txt, design_document.txt, this file
+
+Repository
+`````````````````````````````````````````````````````````````````````````````````````````````````````
+All three members are collaborators on the GitHub repository and commit under
+their own accounts.
+
+
+Individual reflections (3 to 5 sentences) placeholder
+`````````````````````````````````````````````````````````````````````````````````````````````````````
